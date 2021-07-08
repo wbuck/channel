@@ -1,0 +1,23 @@
+cmake_minimum_required(VERSION 3.20)
+project(channel)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CXX_STANDARD_REQUIRED YES)
+set(CXX_EXTENSIONS NO)
+
+find_package(fmt REQUIRED)
+
+add_executable(${PROJECT_NAME}
+    src/main.cpp
+)
+
+add_library(warnings INTERFACE)
+include(cmake/warnings.cmake)
+
+set_project_warnings(warnings)
+
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+        warnings
+        fmt::fmt
+)
