@@ -8,6 +8,8 @@
 #include <optional>
 #include <condition_variable>
 #include <iostream>
+#define FMT_HEADER_ONLY
+#include <fmt/format.h>
 
 namespace mpsc {
     namespace detail {
@@ -163,8 +165,9 @@ namespace mpsc {
 
     template<typename T>
     inline std::pair<Sender<T>, Receiver<T>> create_unbounded( ) {
-        auto shared{ std::make_shared<detail::Shared<T>>( ) };
-        return { Sender<T>{ shared }, Receiver<T>{ shared } };
+        auto tx{ std::make_shared<detail::Shared<T>>( ) };
+        auto rx{ tx };
+        return { Sender<T>{ std::move( tx ) }, Receiver<T>{ std::move( rx ) } };
     } 
 }
 
