@@ -74,6 +74,18 @@
         "*.tcc": "cpp",
         "memory_resource": "cpp",
         "ranges": "cpp",
-        "stop_token": "cpp"
+        "stop_token": "cpp",
+        "__tree": "cpp",
+        "codecvt": "cpp",
+        "fstream": "cpp",
+        "future": "cpp",
+        "iomanip": "cpp",
+        "map": "cpp",
+        "regex": "cpp",
+        "set": "cpp",
+        "shared_mutex": "cpp",
+        "stack": "cpp",
+        "variant": "cpp",
+        "cinttypes": "cpp"
     }
 }
