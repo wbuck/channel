@@ -145,7 +145,7 @@ namespace mpsc {
         if ( !shared_->inner.queue.empty( ) ) {                
             auto value{ std::move( shared_->inner.queue.front( ) ) };
             shared_->inner.queue.pop_front( );
-            std::swap( shared_->inner.queue, buffer_ );
+            shared_->inner.queue.swap( buffer_ );
             return value;
         }
         return std::nullopt;
