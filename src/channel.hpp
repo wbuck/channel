@@ -8,8 +8,6 @@
 #include <optional>
 #include <condition_variable>
 #include <iostream>
-#define FMT_HEADER_ONLY
-#include <fmt/format.h>
 
 namespace mpsc {
     namespace detail {
@@ -35,14 +33,14 @@ namespace mpsc {
         { }
 
         Sender( const Sender& other );
-        Sender& operator=( const Sender<T>& other );
+        Sender& operator=( const Sender& other );
 
         Sender( Sender&& ) = default;
         Sender& operator=( Sender&& ) = default;
 
         auto send( T value ) -> void;
 
-        ~Sender( ) noexcept;
+        ~Sender( );
 
     private:
         std::shared_ptr<detail::Shared<T>> shared_;
@@ -64,7 +62,7 @@ namespace mpsc {
     }
 
     template<typename T>
-    inline Sender<T>::~Sender( ) noexcept {
+    inline Sender<T>::~Sender( ) {
         bool was_last{ false };
         if ( shared_ ) {
             std::scoped_lock{ shared_->lock };
@@ -98,7 +96,7 @@ namespace mpsc {
         Receiver& operator=( const Receiver& ) = delete;
 
         auto recv( ) -> std::optional<T>;
-
+        
         auto try_recv( ) -> std::optional<T>;
 
     private: 
@@ -111,7 +109,7 @@ namespace mpsc {
         std::list<T> buffer_{ };
     };
 
-    template<typename T>
+    template<typename T>    
     inline auto Receiver<T>::try_recv( ) -> std::optional<T> {
         if ( auto value{ recv_buffer( ) }; value.has_value( ) ) {
             return value;
