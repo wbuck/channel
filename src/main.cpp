@@ -5,8 +5,6 @@
 #include <tuple>
 #include <string>
 #include <type_traits>
-#define FMT_HEADER_ONLY
-#include <fmt/format.h>
 
 
 class Test { 
@@ -26,7 +24,7 @@ private:
 static void worker1( mpsc::Receiver<Test> rx ) {
     while ( true ) {
         if ( auto value{ rx.recv( ) }; value.has_value( ) ) {
-            fmt::print( "{}\n", value->operator( )( ) );
+            std::cout << value->operator( )( ) << '\n';
         }
         else {
             return;
@@ -44,7 +42,6 @@ static void worker2( mpsc::Sender<Test> tx ) {
 }
 
 int main( ) {
-
     std::pair pair{ mpsc::create_unbounded<Test>( ) };
 
     std::thread t1{ [ rx = std::move( pair.second ) ] ( ) mutable { 

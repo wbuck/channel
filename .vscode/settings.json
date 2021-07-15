@@ -86,6 +86,7 @@
         "shared_mutex": "cpp",
         "stack": "cpp",
         "variant": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "numbers": "cpp"
     }
 }

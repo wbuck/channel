@@ -7,7 +7,6 @@
 #include <tuple>
 #include <optional>
 #include <condition_variable>
-#include <iostream>
 
 namespace mpsc {
     namespace detail {
@@ -47,14 +46,14 @@ namespace mpsc {
     };
 
     template<typename T>
-    inline Sender<T>::Sender( const Sender& other ) {
+    Sender<T>::Sender( const Sender& other ) {
         std::scoped_lock{ other.shared_->lock };
         shared_ = other.shared_;
         shared_->inner.senders += 1;
     }
 
     template<typename T>
-    inline Sender<T>& Sender<T>::operator=( const Sender& other ) {
+    Sender<T>& Sender<T>::operator=( const Sender& other ) {
         std::scoped_lock{ other.shared_->lock };
         shared_ = other.shared_;
         shared_->inner.senders += 1;
@@ -62,7 +61,7 @@ namespace mpsc {
     }
 
     template<typename T>
-    inline Sender<T>::~Sender( ) {
+    Sender<T>::~Sender( ) {
         bool was_last{ false };
         if ( shared_ ) {
             std::scoped_lock{ shared_->lock };
@@ -75,7 +74,7 @@ namespace mpsc {
     }
 
     template<typename T>
-    inline auto Sender<T>::send( T value ) -> void {
+    auto Sender<T>::send( T value ) -> void {
         std::unique_lock lock{ shared_->lock };
         shared_->inner.queue.push_back( std::move( value ) );
         lock.unlock( );
@@ -110,7 +109,7 @@ namespace mpsc {
     };
 
     template<typename T>    
-    inline auto Receiver<T>::try_recv( ) -> std::optional<T> {
+    auto Receiver<T>::try_recv( ) -> std::optional<T> {
         if ( auto value{ recv_buffer( ) }; value.has_value( ) ) {
             return value;
         }
@@ -123,7 +122,7 @@ namespace mpsc {
     }
 
     template<typename T>
-    inline auto Receiver<T>::recv( ) -> std::optional<T> {
+    auto Receiver<T>::recv( ) -> std::optional<T> {
         if ( auto value{ recv_buffer( ) }; value.has_value( ) ) {
             return value;
         }
@@ -141,8 +140,8 @@ namespace mpsc {
     }
 
     template<typename T>
-    inline auto Receiver<T>::recv_queue( ) -> std::optional<T> {
-        if ( !shared_->inner.queue.empty( ) ) {                
+    auto Receiver<T>::recv_queue( ) -> std::optional<T> {
+        if ( !shared_->inner.queue.empty( ) ) {            
             auto value{ std::move( shared_->inner.queue.front( ) ) };
             shared_->inner.queue.pop_front( );
             shared_->inner.queue.swap( buffer_ );
@@ -152,7 +151,7 @@ namespace mpsc {
     }
 
     template<typename T>
-    inline auto Receiver<T>::recv_buffer( ) -> std::optional<T> {
+    auto Receiver<T>::recv_buffer( ) -> std::optional<T> {
         if ( !buffer_.empty( ) ) {
             auto value{ std::move( buffer_.front( ) ) };
             buffer_.pop_front( );
@@ -162,7 +161,7 @@ namespace mpsc {
     }
 
     template<typename T>
-    inline std::pair<Sender<T>, Receiver<T>> create_unbounded( ) {
+    std::pair<Sender<T>, Receiver<T>> create_unbounded( ) {
         auto tx{ std::make_shared<detail::Shared<T>>( ) };
         auto rx{ tx };
         return { Sender<T>{ std::move( tx ) }, Receiver<T>{ std::move( rx ) } };

@@ -10,8 +10,8 @@ if [[ $# -eq 0 ]]; then
     build_type=Debug
 fi
 
-cmake -B build -S . -DCMAKE_C_COMPILER=gcc-10 \
-                    -DCMAKE_CXX_COMPILER=g++-10 \
+cmake -B build -S . -DCMAKE_C_COMPILER=gcc-11 \
+                    -DCMAKE_CXX_COMPILER=g++-11 \
                     -DCMAKE_BUILD_TYPE=$build_type \
                     -DCMAKE_TOOLCHAIN_FILE=/Users/wbuckley/vcpkg/scripts/buildsystems/vcpkg.cmake
 result=$?
